@@ -1,0 +1,37 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+x = np.array([0,1000,2000,3000,4000,5000,6000,7000])  #in meters
+y = np.array([15,11,7,3,-1,-5,-9,-13])  #in celcius
+
+x=x/1000
+m = 0
+b = 0
+n = len(x)
+iterations = 1000
+lrate = 0.01
+
+for _ in range(iterations):
+    y_pred = m * x + b
+    dm = -(2/n)*np.sum(x*(y-y_pred))
+    db = -(2/n)*np.sum(y-y_pred)
+
+    m = m-lrate*dm
+    b = b-lrate*db
+
+    print(f"slope(m):{m:.5f}")
+    print(f"intercept(b):{b:.5f}")
+
+def pred(altitude):
+  return m*altitude+b
+
+plt.scatter(x,y,color='blue',label='actual data')
+plt.plot(x,pred(x),color='red',label='best fit line')
+plt.xlabel('Altitude')
+plt.ylabel('Temperature')
+plt.title('Temperature Prediction')
+plt.legend()
+plt.show()
+show_alt=8  #Enter value in kilometer
+pred_score=pred(show_alt)
+print(f"Altitude {show_alt*1000} temperature:{pred_score}")
