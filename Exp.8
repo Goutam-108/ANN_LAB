@@ -1,0 +1,169 @@
+import numpy as np
+
+# Sample Data (XOR)
+X = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
+Y = np.array([[0], [1], [1], [0]])
+
+W = np.random.rand(2, 1)
+b = np.random.rand(1)
+lr = 0.1
+epochs = 1000
+
+def sigmoid(x):
+    return 1 / (1 + np.exp(-x))
+
+def sigmoid_derivative(x):
+    return x * (1 - x)
+
+def mse_loss(y_true, y_pred):
+    return np.mean((y_true - y_pred) ** 2)
+
+def cross_entropy_loss(y_true, y_pred):
+    eps = 1e-15
+    y_pred = np.clip(y_pred, eps, 1 - eps)
+    return -np.mean(y_true * np.log(y_pred) + (1 - y_true) * np.log(1 - y_pred))
+
+loss_type = 'cross_entropy'  # Change to 'mse' to use MSE
+
+for epoch in range(epochs):
+    z = np.dot(X, W) + b
+    A = sigmoid(z)
+
+    if loss_type == 'mse':
+        loss = mse_loss(Y, A)
+        d_loss = (Y - A) * sigmoid_derivative(A)
+    elif loss_type == 'cross_entropy':
+        loss = cross_entropy_loss(Y, A)
+        d_loss = (A - Y)
+
+    dW = np.dot(X.T, d_loss)
+    db = np.sum(d_loss)
+
+    W -= lr * dW
+    b -= lr * db
+
+    if epoch % 100 == 0:
+        print(f"Epoch {epoch}, Loss: {loss:.4f}")
+
+output = sigmoid(np.dot(X, W) + b)
+print("\nFinal Predictions:")
+print(output.round())
+
+
+#Exp8.1
+# House Price Prediction
+
+import numpy as np
+
+
+X = np.array([[3, 1500, 0.7], [2, 1000, 0.5], [4, 2000, 0.8], [3, 1200, 0.6]])  # Features: rooms, area, location_index
+Y = np.array([[250000], [180000], [320000], [220000]])  # price
+
+W = np.random.rand(3, 1)  
+b = np.random.rand(1)
+lr = 0.1 
+epochs = 10000 
+
+def sigmoid(x):
+    return 1 / (1 + np.exp(-x))
+
+def sigmoid_derivative(x):
+    return x * (1 - x)
+
+def mse_loss(y_true, y_pred):
+    return np.mean((y_true - y_pred) ** 2)
+
+def cross_entropy_loss(y_true, y_pred):
+  eps = 1e-15
+  y_pred = np.clip(y_pred, eps, 1 - eps)
+  return -np.mean(y_true * np.log(y_pred) + (1 - y_true) * np.log(1 - y_pred))
+
+
+# Training Loop
+loss_type = 'mse'  # Change to 'mse' to use MSE
+
+for epoch in range(epochs):
+    z = np.dot(X, W) + b
+    A = sigmoid(z)
+
+    if loss_type == 'mse':
+        loss = mse_loss(Y, A)
+        d_loss = (Y - A) * sigmoid_derivative(A)
+    elif loss_type == 'cross_entropy':
+        loss = cross_entropy_loss(Y, A)
+        d_loss = (A - Y)
+
+    dW = np.dot(X.T, d_loss)
+    db = np.sum(d_loss)
+
+    W -= lr * dW
+    b -= lr * db
+
+    if epoch % 100 == 0:
+        print(f"Epoch {epoch}, Loss: {loss:.4f}")
+
+
+output = sigmoid(np.dot(X, W) + b)
+print("\nFinal Predictions:")
+print(output.round())
+
+Exp 8.2
+# Spam Filtering
+
+import numpy as np
+
+X = np.array([
+    [1, 0, 1, 200],  
+    [0, 1, 0, 150], 
+    [1, 1, 1, 300],
+    [0, 0, 0, 100],  
+])
+
+Y = np.array([1, 0, 1, 0])  
+
+W = np.random.rand(4, 1)  # 4 features
+b = np.random.rand(1)
+lr = 0.1  
+epochs = 1000
+
+def sigmoid(x):
+    return 1 / (1 + np.exp(-x))
+
+def sigmoid_derivative(x):
+    return x * (1 - x)
+
+def mse_loss(y_true, y_pred):
+    return np.mean((y_true - y_pred) ** 2)
+
+def cross_entropy_loss(y_true, y_pred):
+    eps = 1e-15
+    y_pred = np.clip(y_pred, eps, 1 - eps)
+    return -np.mean(y_true * np.log(y_pred) + (1 - y_true) * np.log(1 - y_pred))
+
+# Training Loop
+loss_type = 'cross_entropy'  # Change to 'mse' to use MSE
+
+for epoch in range(epochs):
+    z = np.dot(X, W) + b
+    A = sigmoid(z)
+
+    if loss_type == 'mse':
+        loss = mse_loss(Y, A)
+        d_loss = (Y - A) * sigmoid_derivative(A)
+    elif loss_type == 'cross_entropy':
+        loss = cross_entropy_loss(Y, A)
+        d_loss = (A - Y)
+
+    dW = np.dot(X.T, d_loss)
+    db = np.sum(d_loss)
+
+    W = W - lr * dW
+    b -= lr * db
+
+    if epoch % 100 == 0:
+        print(f"Epoch {epoch}, Loss: {loss:.4f}")
+
+
+output = sigmoid(np.dot(X, W) + b)
+print("\nFinal Predictions:")
+print(output.round())
